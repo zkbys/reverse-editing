@@ -48,3 +48,13 @@ python3 skills/reverse-editing-workflow/scripts/init_project.py --intake <intake
 ```
 
 Create a real project directory only after the intake is ready and the user agrees.
+
+## Previs Rendering
+
+After `analysis/shot_index.reviewed.json`, `storyboard/storyboard.json`, and `previs/previs_plan.json` exist, generate a local static review page:
+
+```bash
+python3 skills/reverse-editing-workflow/scripts/render_previs_html.py --project-dir <project_dir> --force
+```
+
+The generated HTML is an internal review artifact only. Do not treat reference frames as publishable media.

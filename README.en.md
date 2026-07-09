@@ -56,6 +56,12 @@ python3 skills/reverse-editing-workflow/scripts/init_project.py --intake samples
 python3 skills/reverse-editing-workflow/scripts/validate_content_layer.py --project-dir samples/fake-corner-noodle
 ```
 
+After a project has `analysis/shot_index.reviewed.json`, `storyboard/storyboard.json`, and `previs/previs_plan.json`, render a local low-fidelity previs page:
+
+```bash
+python3 skills/reverse-editing-workflow/scripts/render_previs_html.py --project-dir outputs/<project_id> --force
+```
+
 ## Safety Defaults
 
 Unless explicitly authorized, the workflow should not:
@@ -70,7 +76,7 @@ Unless explicitly authorized, the workflow should not:
 
 ## Status
 
-Alpha. Good for intake, project setup, schema validation, editable control-layer checks, and sample exploration.
+Alpha. Good for intake, project setup, schema validation, editable control-layer checks, static HTML previs, and sample exploration.
 
 Not complete yet:
 

@@ -70,6 +70,16 @@ python3 skills/reverse-editing-workflow/scripts/validate_content_layer.py --proj
 
 VTT/SRT exports are review artifacts. They are not approval to burn subtitles into video or write a Jianying draft.
 
+## Low-Fidelity Previs
+
+After `analysis/shot_index.reviewed.json`, `storyboard/storyboard.json`, and `previs/previs_plan.json` exist, render a local static HTML review page:
+
+```bash
+python3 skills/reverse-editing-workflow/scripts/render_previs_html.py --project-dir <project_dir> --force
+```
+
+The renderer writes `previs/index.html`, `previs/previs_manifest.json`, and `reports/previs_html_render_report.json`. It must stay local-only: reference frames are for structure review, not publishable media.
+
 ## References
 
 Load only what the current loop needs:
@@ -82,4 +92,4 @@ Load only what the current loop needs:
 
 ## Current Status
 
-This is an alpha workflow package. It is safe for local intake, project setup, schema validation, and sample exploration. Real video analysis, LibTV generation, TTS, OCR installation, and Jianying draft modification remain explicit follow-up loops.
+This is an alpha workflow package. It is safe for local intake, project setup, schema validation, content-layer validation, and static HTML previs rendering. Real video analysis, LibTV generation, TTS, OCR installation, and Jianying draft modification remain explicit follow-up loops.

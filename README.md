@@ -88,6 +88,14 @@ python3 skills/reverse-editing-workflow/scripts/validate_content_layer.py \
   --project-dir samples/fake-corner-noodle
 ```
 
+当某个项目已经有 `analysis/shot_index.reviewed.json`、`storyboard/storyboard.json` 和 `previs/previs_plan.json` 后，可以生成本地低保真预演页：
+
+```bash
+python3 skills/reverse-editing-workflow/scripts/render_previs_html.py \
+  --project-dir outputs/<project_id> \
+  --force
+```
+
 ## 默认安全边界
 
 除非你明确授权，否则 workflow 不应该：
@@ -102,7 +110,7 @@ python3 skills/reverse-editing-workflow/scripts/validate_content_layer.py \
 
 ## 当前状态
 
-这是 `alpha` 版本。它适合体验 intake、project setup、schema validation、可编辑内容层和 sample 项目结构。
+这是 `alpha` 版本。它适合体验 intake、project setup、schema validation、可编辑内容层、静态 HTML previs 和 sample 项目结构。
 
 尚未完成：
 
