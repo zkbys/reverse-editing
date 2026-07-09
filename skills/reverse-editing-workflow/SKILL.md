@@ -70,6 +70,16 @@ python3 skills/reverse-editing-workflow/scripts/validate_content_layer.py --proj
 
 VTT/SRT exports are review artifacts. They are not approval to burn subtitles into video or write a Jianying draft.
 
+## Local Video Analysis
+
+When a local source video is already authorized and available in the project, run deterministic local analysis before drafting shot boundaries:
+
+```bash
+python3 skills/reverse-editing-workflow/scripts/analyze_reference_video.py --project-dir <project_dir> --force
+```
+
+This helper requires `ffmpeg` and `ffprobe` on `PATH`. It writes `analysis/video_probe.json`, `analysis/frame_samples/`, `analysis/contact_sheet_4x4.jpg`, `analysis/scene_detect/`, `analysis/video_analysis_manifest.json`, and `reports/video_analysis_report.json`. It must not download, install dependencies, generate video, call TTS, or modify Jianying drafts.
+
 ## Low-Fidelity Previs
 
 After `analysis/shot_index.reviewed.json`, `storyboard/storyboard.json`, and `previs/previs_plan.json` exist, render a local static HTML review page:

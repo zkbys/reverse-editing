@@ -56,6 +56,12 @@ python3 skills/reverse-editing-workflow/scripts/init_project.py --intake samples
 python3 skills/reverse-editing-workflow/scripts/validate_content_layer.py --project-dir samples/fake-corner-noodle
 ```
 
+When an authorized local video already exists in a project, run local analysis with system `ffmpeg/ffprobe`:
+
+```bash
+python3 skills/reverse-editing-workflow/scripts/analyze_reference_video.py --project-dir outputs/<project_id> --force
+```
+
 After a project has `analysis/shot_index.reviewed.json`, `storyboard/storyboard.json`, and `previs/previs_plan.json`, render a local low-fidelity previs page:
 
 ```bash

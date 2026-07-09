@@ -49,6 +49,16 @@ python3 skills/reverse-editing-workflow/scripts/init_project.py --intake <intake
 
 Create a real project directory only after the intake is ready and the user agrees.
 
+## Local Video Analysis
+
+When a local video has been explicitly authorized and copied into the project, run:
+
+```bash
+python3 skills/reverse-editing-workflow/scripts/analyze_reference_video.py --project-dir <project_dir> --force
+```
+
+This requires `ffmpeg/ffprobe` already installed. Do not install them without explicit user approval.
+
 ## Previs Rendering
 
 After `analysis/shot_index.reviewed.json`, `storyboard/storyboard.json`, and `previs/previs_plan.json` exist, generate a local static review page:

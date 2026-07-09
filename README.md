@@ -81,6 +81,14 @@ python3 skills/reverse-editing-workflow/scripts/init_project.py \
   --report /tmp/reverse-editing-demo-init.json
 ```
 
+当项目内已有授权本地视频时，可以运行本地分析（需要系统已有 `ffmpeg/ffprobe`）：
+
+```bash
+python3 skills/reverse-editing-workflow/scripts/analyze_reference_video.py \
+  --project-dir outputs/<project_id> \
+  --force
+```
+
 校验内容层并导出 VTT/SRT：
 
 ```bash
