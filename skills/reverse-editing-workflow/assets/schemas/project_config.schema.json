@@ -1,0 +1,326 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reverse-editing.local/schemas/project_config.schema.json",
+  "title": "Reverse editing project config",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "project_id",
+    "created_at",
+    "project_kind",
+    "reference_video_source",
+    "target",
+    "output_goal",
+    "manual_review_required",
+    "directory_layout",
+    "required_artifacts",
+    "jianying",
+    "generation_policy",
+    "acceptance_checks",
+    "status_lifecycle"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "project-config-v1"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_\\-]{2,80}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "project_kind": {
+      "type": "string",
+      "enum": [
+        "reference_reverse_editing",
+        "same_structure_remake",
+        "shooting_preview",
+        "real_material_replacement"
+      ]
+    },
+    "reference_video_source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_type",
+        "path_or_url",
+        "source_store_type",
+        "copy_reference_text_allowed"
+      ],
+      "properties": {
+        "source_type": {
+          "type": "string",
+          "enum": [
+            "local_file",
+            "downloaded_file",
+            "short_video_url",
+            "manual_asset_package"
+          ]
+        },
+        "path_or_url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_store_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "copy_reference_text_allowed": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_store_type",
+        "target_store_profile",
+        "account_fields_status"
+      ],
+      "properties": {
+        "target_store_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_store_profile": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "store_name",
+            "city_or_area",
+            "signature_products",
+            "people_roles",
+            "shooting_constraints"
+          ],
+          "properties": {
+            "store_name": {
+              "type": ["string", "null"]
+            },
+            "city_or_area": {
+              "type": ["string", "null"]
+            },
+            "signature_products": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "people_roles": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "shooting_constraints": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "account_fields_status": {
+          "type": "string",
+          "enum": [
+            "unknown_placeholder",
+            "provided_needs_review",
+            "approved"
+          ]
+        }
+      }
+    },
+    "output_goal": {
+      "type": "string",
+      "enum": [
+        "analysis_only",
+        "storyboard_and_previs",
+        "shooting_preview_and_jianying_draft",
+        "real_material_jianying_draft",
+        "final_publish_candidate"
+      ]
+    },
+    "manual_review_required": {
+      "type": "boolean",
+      "const": true
+    },
+    "directory_layout": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "source",
+          "analysis",
+          "planning_same_structure",
+          "content",
+          "subtitles",
+          "audio",
+          "storyboard",
+          "previs",
+          "review_same_structure",
+          "previs_same_structure",
+          "jianying_manifest",
+          "jianying_template",
+          "generation_workflow",
+          "quality",
+          "reports"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "required_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "shot_index.reviewed.json",
+          "copy_script.json",
+          "voiceover_script.json",
+          "subtitle_track.json",
+          "word_timestamps.json",
+          "audio_mix_plan.json",
+          "storyboard",
+          "preview",
+          "jianying_manifest",
+          "acceptance_report"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "jianying": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "seed_strategy",
+        "seed_draft_path",
+        "current_preview_draft_path",
+        "modify_existing_draft_allowed"
+      ],
+      "properties": {
+        "seed_strategy": {
+          "type": "string",
+          "enum": [
+            "seed_clone_slot_replacement",
+            "manual_template",
+            "not_applicable"
+          ]
+        },
+        "seed_draft_path": {
+          "type": ["string", "null"]
+        },
+        "current_preview_draft_path": {
+          "type": ["string", "null"]
+        },
+        "modify_existing_draft_allowed": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "generation_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "remote_video_generation_allowed",
+        "libtv_allowed_by_default",
+        "tts_allowed_by_default",
+        "dirty_subtitle_qc_required"
+      ],
+      "properties": {
+        "remote_video_generation_allowed": {
+          "type": "boolean"
+        },
+        "libtv_allowed_by_default": {
+          "type": "boolean"
+        },
+        "tts_allowed_by_default": {
+          "type": "boolean"
+        },
+        "dirty_subtitle_qc_required": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "acceptance_checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "check_id",
+          "description",
+          "required",
+          "status"
+        ],
+        "properties": {
+          "check_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_\\-]+$"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "passed",
+              "failed",
+              "not_applicable",
+              "known_limitation"
+            ]
+          }
+        }
+      }
+    },
+    "status_lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "analysis_done",
+        "content_layer_done",
+        "previs_done",
+        "jianying_template_done",
+        "ai_preview_done",
+        "real_material_done",
+        "export_done"
+      ],
+      "properties": {
+        "analysis_done": {
+          "type": "boolean"
+        },
+        "content_layer_done": {
+          "type": "boolean"
+        },
+        "previs_done": {
+          "type": "boolean"
+        },
+        "jianying_template_done": {
+          "type": "boolean"
+        },
+        "ai_preview_done": {
+          "type": "boolean"
+        },
+        "real_material_done": {
+          "type": "boolean"
+        },
+        "export_done": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

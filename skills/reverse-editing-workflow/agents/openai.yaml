@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reverse Editing Workflow"
+  short_description: "Reverse short-video references into editable workflow packages"
+  default_prompt: "Use $reverse-editing-workflow to process this reference video as a safe local reverse-editing workflow package."

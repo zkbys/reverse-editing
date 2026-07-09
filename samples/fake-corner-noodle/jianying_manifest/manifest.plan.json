@@ -1,0 +1,25 @@
+{
+  "schema_version": "jianying-manifest-plan-sample-v1",
+  "project_id": "sample_corner_noodle_reference",
+  "status": "plan_only_no_draft_created",
+  "slots": [
+    {
+      "slot_id": "shot_001",
+      "start_ms": 0,
+      "duration_ms": 3000,
+      "source": "pending_real_or_preview_media"
+    },
+    {
+      "slot_id": "shot_002",
+      "start_ms": 3000,
+      "duration_ms": 3500,
+      "source": "pending_real_or_preview_media"
+    },
+    {
+      "slot_id": "shot_003",
+      "start_ms": 6500,
+      "duration_ms": 3000,
+      "source": "pending_real_or_preview_media"
+    }
+  ]
+}

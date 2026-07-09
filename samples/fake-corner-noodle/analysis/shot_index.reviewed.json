@@ -1,0 +1,31 @@
+{
+  "schema_version": "shot-index-reviewed-sample-v1",
+  "project_id": "sample_corner_noodle_reference",
+  "shot_count": 3,
+  "shots": [
+    {
+      "shot_id": "shot_001",
+      "start_ms": 0,
+      "end_ms": 3000,
+      "duration_ms": 3000,
+      "reference_function": "Open with storefront and owner presence.",
+      "review_status": "sample_reviewed"
+    },
+    {
+      "shot_id": "shot_002",
+      "start_ms": 3000,
+      "end_ms": 6500,
+      "duration_ms": 3500,
+      "reference_function": "Show kitchen process and product preparation.",
+      "review_status": "sample_reviewed"
+    },
+    {
+      "shot_id": "shot_003",
+      "start_ms": 6500,
+      "end_ms": 9500,
+      "duration_ms": 3000,
+      "reference_function": "Close with finished bowl and call to action.",
+      "review_status": "sample_reviewed"
+    }
+  ]
+}

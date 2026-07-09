@@ -1,0 +1,88 @@
+{
+  "schema_version": "content-layer-mvp-v1",
+  "project_id": "sample_corner_noodle_reference",
+  "created_at": "2026-07-09T00:00:00+08:00",
+  "language": "zh-CN",
+  "target_business_type": "fictional_noodle_shop",
+  "source_files": {
+    "shot_index": "analysis/shot_index.reviewed.json",
+    "replacement_plan": "storyboard/storyboard.md",
+    "shooting_board": "storyboard/storyboard.md",
+    "store_profile": "project_config.json"
+  },
+  "copy_policy": {
+    "reference_text_policy": "extract_structure_only_do_not_copy_original_words",
+    "per_shot_customization_required": true,
+    "editable_source_required": true,
+    "forbidden_outputs": [
+      "burned_in_text_only",
+      "libtv_generated_subtitle_as_final_copy",
+      "copied_reference_video_wording"
+    ]
+  },
+  "versions": [
+    "internal_preview",
+    "shooting_guide"
+  ],
+  "timeline_source": "shot_index_reviewed",
+  "shot_count": 3,
+  "shots": [
+    {
+      "shot_id": "shot_001",
+      "start_ms": 0,
+      "end_ms": 3000,
+      "duration_ms": 3000,
+      "reference_function": "Open with storefront and owner presence.",
+      "target_visual_function": "门头和店主同时出现，建立真实小店感。",
+      "target_message": "这是一家虚构但完整可演示的街角面馆。",
+      "copy_intent": "建立地点和人物。",
+      "spoken_copy": "这是街角小面，一家专做热汤面的虚构样例店。",
+      "subtitle_copy": "街角小面，热汤面样例店",
+      "cta_or_selling_point": "真实门店感",
+      "version": "internal_preview",
+      "editing_notes": [
+        "Replace sample store name before real use."
+      ],
+      "editable": true,
+      "copy_status": "needs_review"
+    },
+    {
+      "shot_id": "shot_002",
+      "start_ms": 3000,
+      "end_ms": 6500,
+      "duration_ms": 3500,
+      "reference_function": "Show kitchen process and product preparation.",
+      "target_visual_function": "展示揉面、下锅、浇汤的过程。",
+      "target_message": "产品卖点来自真实制作动作。",
+      "copy_intent": "把制作过程变成可信卖点。",
+      "spoken_copy": "面现揉，汤现浇，镜头重点放在手上的动作。",
+      "subtitle_copy": "面现揉，汤现浇",
+      "cta_or_selling_point": "现做过程",
+      "version": "internal_preview",
+      "editing_notes": [
+        "Use real production details in a real project."
+      ],
+      "editable": true,
+      "copy_status": "needs_review"
+    },
+    {
+      "shot_id": "shot_003",
+      "start_ms": 6500,
+      "end_ms": 9500,
+      "duration_ms": 3000,
+      "reference_function": "Close with finished bowl and call to action.",
+      "target_visual_function": "成品碗近景，片尾保留账号占位。",
+      "target_message": "完成一次到店或关注引导。",
+      "copy_intent": "收束到产品和行动。",
+      "spoken_copy": "喜欢热汤面的朋友，可以把这条样例当成拍摄结构参考。",
+      "subtitle_copy": "把这条当成拍摄结构参考",
+      "cta_or_selling_point": "结构参考",
+      "version": "internal_preview",
+      "editing_notes": [
+        "Tail account fields must be replaced before publishing."
+      ],
+      "editable": true,
+      "copy_status": "needs_review"
+    }
+  ]
+}

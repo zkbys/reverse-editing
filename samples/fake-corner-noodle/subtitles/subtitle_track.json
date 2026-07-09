@@ -1,0 +1,90 @@
+{
+  "schema_version": "content-layer-mvp-v1",
+  "project_id": "sample_corner_noodle_reference",
+  "created_at": "2026-07-09T00:00:00+08:00",
+  "language": "zh-CN",
+  "source_files": {
+    "copy_script": "content/copy_script.json",
+    "voiceover_script": "content/voiceover_script.json",
+    "word_timestamps": "subtitles/word_timestamps.json",
+    "shot_index": "analysis/shot_index.reviewed.json"
+  },
+  "subtitle_policy": {
+    "timing_master": "voiceover_timeline",
+    "editable_track_required": true,
+    "burned_in_subtitles_are_not_source": true,
+    "max_chars_per_caption": 28,
+    "allowed_timing_sources": [
+      "estimated_placeholder",
+      "manual_reviewed_alignment"
+    ]
+  },
+  "dirty_subtitle_qc_policy": {
+    "libtv_generated_text_status": "qc_failure_or_known_limitation_not_formal_subtitle",
+    "failure_items": [
+      "model_generated_subtitles",
+      "account_ui",
+      "wrong_store_name",
+      "watermark_or_platform_mark",
+      "unapproved_on_screen_text"
+    ],
+    "qc_required_before_jianying_insert": true,
+    "recommended_qc_method": [
+      "sample_frames",
+      "manual_review_contact_sheet"
+    ]
+  },
+  "timeline_source": "shot_index_reviewed",
+  "export_targets": [
+    "webvtt",
+    "srt"
+  ],
+  "subtitle_count": 3,
+  "subtitles": [
+    {
+      "subtitle_id": "sub_001_01",
+      "shot_id": "shot_001",
+      "voice_segment_id": "vo_001",
+      "start_ms": 200,
+      "end_ms": 2800,
+      "text": "街角小面，热汤面样例店",
+      "source_words": [],
+      "word_start_index": 0,
+      "word_end_index": 0,
+      "position": "lower_center",
+      "timing_source": "estimated_placeholder",
+      "editable": true,
+      "status": "estimated"
+    },
+    {
+      "subtitle_id": "sub_002_01",
+      "shot_id": "shot_002",
+      "voice_segment_id": "vo_002",
+      "start_ms": 3300,
+      "end_ms": 6100,
+      "text": "面现揉，汤现浇",
+      "source_words": [],
+      "word_start_index": 0,
+      "word_end_index": 0,
+      "position": "lower_center",
+      "timing_source": "estimated_placeholder",
+      "editable": true,
+      "status": "estimated"
+    },
+    {
+      "subtitle_id": "sub_003_01",
+      "shot_id": "shot_003",
+      "voice_segment_id": "vo_003",
+      "start_ms": 6800,
+      "end_ms": 9300,
+      "text": "把这条当成拍摄结构参考",
+      "source_words": [],
+      "word_start_index": 0,
+      "word_end_index": 0,
+      "position": "lower_center",
+      "timing_source": "estimated_placeholder",
+      "editable": true,
+      "status": "estimated"
+    }
+  ]
+}

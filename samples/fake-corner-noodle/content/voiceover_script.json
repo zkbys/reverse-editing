@@ -1,0 +1,73 @@
+{
+  "schema_version": "content-layer-mvp-v1",
+  "project_id": "sample_corner_noodle_reference",
+  "created_at": "2026-07-09T00:00:00+08:00",
+  "language": "zh-CN",
+  "source_files": {
+    "copy_script": "content/copy_script.json",
+    "shot_index": "analysis/shot_index.reviewed.json",
+    "replacement_plan": "storyboard/storyboard.md"
+  },
+  "voiceover_policy": {
+    "editable_script_required": true,
+    "real_timing_required_before_final_subtitles": true,
+    "allowed_timing_sources": [
+      "estimated_placeholder",
+      "manual_reviewed_alignment"
+    ],
+    "no_audio_generated_in_mvp": true
+  },
+  "voice_profile": {
+    "voice_name": null,
+    "gender_presentation": null,
+    "age_style": null,
+    "accent_or_region": null,
+    "delivery_style": "warm_store_owner"
+  },
+  "timeline_source": "shot_index_reviewed",
+  "segment_count": 3,
+  "segments": [
+    {
+      "voice_segment_id": "vo_001",
+      "shot_id": "shot_001",
+      "script": "这是街角小面，一家专做热汤面的虚构样例店。",
+      "tone": "natural",
+      "target_duration_ms": 2600,
+      "pause_after_ms": 200,
+      "shot_fit_policy": "fit_inside_shot",
+      "tts_provider": "pending",
+      "timing_source": "estimated_placeholder",
+      "alignment_status": "estimated",
+      "editable": true,
+      "status": "needs_review"
+    },
+    {
+      "voice_segment_id": "vo_002",
+      "shot_id": "shot_002",
+      "script": "面现揉，汤现浇，镜头重点放在手上的动作。",
+      "tone": "confident",
+      "target_duration_ms": 3000,
+      "pause_after_ms": 200,
+      "shot_fit_policy": "fit_inside_shot",
+      "tts_provider": "pending",
+      "timing_source": "estimated_placeholder",
+      "alignment_status": "estimated",
+      "editable": true,
+      "status": "needs_review"
+    },
+    {
+      "voice_segment_id": "vo_003",
+      "shot_id": "shot_003",
+      "script": "喜欢热汤面的朋友，可以把这条样例当成拍摄结构参考。",
+      "tone": "closing",
+      "target_duration_ms": 2700,
+      "pause_after_ms": 0,
+      "shot_fit_policy": "fit_inside_shot",
+      "tts_provider": "pending",
+      "timing_source": "estimated_placeholder",
+      "alignment_status": "estimated",
+      "editable": true,
+      "status": "needs_review"
+    }
+  ]
+}

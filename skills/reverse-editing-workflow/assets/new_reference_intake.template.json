@@ -1,0 +1,65 @@
+{
+  "schema_version": "new-reference-intake-v1",
+  "project_id": "replace_with_project_id",
+  "created_for_workflow": "reverse-editing-workflow",
+  "reference_video": {
+    "source_type": "not_provided_yet",
+    "source_path_or_url": "",
+    "reference_category": "replace_with_category",
+    "rights_status": "not_provided_yet",
+    "notes": ""
+  },
+  "target_business": {
+    "store_type": "replace_with_store_type",
+    "store_name": "",
+    "city_or_area": "",
+    "owner_or_spokesperson": "",
+    "signature_products": [],
+    "account_display_name": "",
+    "platform_handle": "",
+    "logo_or_avatar_source": "",
+    "fact_status": {
+      "store_name": "missing",
+      "city_or_area": "missing",
+      "owner_or_spokesperson": "missing",
+      "signature_products": "missing",
+      "account_display_name": "missing",
+      "platform_handle": "missing",
+      "logo_or_avatar_source": "missing"
+    }
+  },
+  "content_scope": {
+    "goal": "Create an internal reverse-editing package from the reference video without final publishing claims.",
+    "publish_intent": "internal_preview",
+    "copy_policy": "Write original replacement copy per shot; do not copy reference-video wording.",
+    "subtitle_policy": "Keep subtitles editable and exportable as VTT/SRT; do not treat dirty in-frame text as formal subtitles.",
+    "voiceover_policy": "Keep voiceover text editable; do not call TTS until explicitly authorized."
+  },
+  "authorization_flags": {
+    "allow_libtv": false,
+    "allow_remote_video_generation": false,
+    "allow_tts": false,
+    "allow_ocr_install": false,
+    "allow_jianying_draft_modification": false
+  },
+  "initial_outputs_requested": [
+    "shot_index.reviewed.json",
+    "copy_script.json",
+    "voiceover_script.json",
+    "subtitle_track.json",
+    "word_timestamps.json",
+    "audio_mix_plan.json",
+    "storyboard",
+    "preview",
+    "jianying_manifest",
+    "acceptance_report"
+  ],
+  "readiness": {
+    "ready_for_project_initialization": false,
+    "blocking_reasons": [
+      "reference_video_not_provided",
+      "target_business_required_facts_missing",
+      "project_id_is_placeholder"
+    ]
+  }
+}

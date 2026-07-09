@@ -1,0 +1,64 @@
+{
+  "schema_version": "new-reference-intake-v1",
+  "project_id": "sample_corner_noodle_reference",
+  "created_for_workflow": "reverse-editing-workflow",
+  "reference_video": {
+    "source_type": "local_file",
+    "source_path_or_url": "source/reference_placeholder.mp4",
+    "reference_category": "fictional_noodle_shop",
+    "rights_status": "user_provided_for_analysis",
+    "notes": "Fictional sample. The video file is intentionally not included."
+  },
+  "target_business": {
+    "store_type": "fictional_noodle_shop",
+    "store_name": "街角小面",
+    "city_or_area": "虚构城市东街",
+    "owner_or_spokesperson": "店主",
+    "signature_products": [
+      "番茄牛肉面",
+      "手揉面"
+    ],
+    "account_display_name": "街角小面",
+    "platform_handle": "sample_noodle_shop",
+    "logo_or_avatar_source": "assets/avatar_placeholder.png",
+    "fact_status": {
+      "store_name": "confirmed",
+      "city_or_area": "confirmed",
+      "owner_or_spokesperson": "confirmed",
+      "signature_products": "confirmed",
+      "account_display_name": "placeholder",
+      "platform_handle": "placeholder",
+      "logo_or_avatar_source": "placeholder"
+    }
+  },
+  "content_scope": {
+    "goal": "Create a local editable reverse-editing sample package without any real video generation.",
+    "publish_intent": "internal_preview",
+    "copy_policy": "Write original replacement copy per shot; do not copy reference-video wording.",
+    "subtitle_policy": "Keep subtitles editable and exportable as VTT/SRT; dirty in-frame text is not a formal subtitle source.",
+    "voiceover_policy": "Keep voiceover text editable; do not call TTS in the sample."
+  },
+  "authorization_flags": {
+    "allow_libtv": false,
+    "allow_remote_video_generation": false,
+    "allow_tts": false,
+    "allow_ocr_install": false,
+    "allow_jianying_draft_modification": false
+  },
+  "initial_outputs_requested": [
+    "shot_index.reviewed.json",
+    "copy_script.json",
+    "voiceover_script.json",
+    "subtitle_track.json",
+    "word_timestamps.json",
+    "audio_mix_plan.json",
+    "storyboard",
+    "preview",
+    "jianying_manifest",
+    "acceptance_report"
+  ],
+  "readiness": {
+    "ready_for_project_initialization": true,
+    "blocking_reasons": []
+  }
+}

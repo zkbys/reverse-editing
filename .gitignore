@@ -1,0 +1,32 @@
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Runtime outputs
+outputs/
+workspaces/
+tmp/
+
+# Media and generated assets
+*.mp4
+*.mov
+*.m4v
+*.avi
+*.mkv
+*.wav
+*.mp3
+*.aac
+*.png
+*.jpg
+*.jpeg
+
+# Jianying / CutCap drafts and local app state
+JianyingPro/
+com.lveditor.draft/
+*.draft/
+
+# Local secrets and machine state
+.env
+.env.*

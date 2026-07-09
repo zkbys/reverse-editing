@@ -1,0 +1,98 @@
+{
+  "schema_version": "project-config-v1",
+  "project_id": "sample_corner_noodle_reference",
+  "created_at": "2026-07-09T00:00:00+08:00",
+  "project_kind": "reference_reverse_editing",
+  "reference_video_source": {
+    "source_type": "local_file",
+    "path_or_url": "source/reference_placeholder.mp4",
+    "source_store_type": "fictional_noodle_shop",
+    "copy_reference_text_allowed": false
+  },
+  "target": {
+    "target_store_type": "fictional_noodle_shop",
+    "target_store_profile": {
+      "store_name": "街角小面",
+      "city_or_area": "虚构城市东街",
+      "signature_products": [
+        "番茄牛肉面",
+        "手揉面"
+      ],
+      "people_roles": [
+        "店主"
+      ],
+      "shooting_constraints": [
+        "fictional sample only",
+        "no real customer faces"
+      ]
+    },
+    "account_fields_status": "provided_needs_review"
+  },
+  "output_goal": "storyboard_and_previs",
+  "manual_review_required": true,
+  "directory_layout": [
+    "source",
+    "analysis",
+    "content",
+    "subtitles",
+    "audio",
+    "storyboard",
+    "previs",
+    "jianying_manifest",
+    "quality",
+    "reports"
+  ],
+  "required_artifacts": [
+    "shot_index.reviewed.json",
+    "copy_script.json",
+    "voiceover_script.json",
+    "subtitle_track.json",
+    "word_timestamps.json",
+    "audio_mix_plan.json",
+    "storyboard",
+    "preview",
+    "jianying_manifest",
+    "acceptance_report"
+  ],
+  "jianying": {
+    "seed_strategy": "seed_clone_slot_replacement",
+    "seed_draft_path": null,
+    "current_preview_draft_path": null,
+    "modify_existing_draft_allowed": false
+  },
+  "generation_policy": {
+    "remote_video_generation_allowed": false,
+    "libtv_allowed_by_default": false,
+    "tts_allowed_by_default": false,
+    "dirty_subtitle_qc_required": true
+  },
+  "acceptance_checks": [
+    {
+      "check_id": "project_id_isolated",
+      "description": "Project uses an isolated outputs/{project_id}/ directory.",
+      "required": true,
+      "status": "passed"
+    },
+    {
+      "check_id": "content_layer_editable",
+      "description": "Copy, voiceover, subtitles, word timestamps, and audio mix plan exist as editable files.",
+      "required": true,
+      "status": "passed"
+    },
+    {
+      "check_id": "dirty_subtitle_qc_done",
+      "description": "No generated media exists in the sample; QC remains pending for real previews.",
+      "required": true,
+      "status": "pending"
+    }
+  ],
+  "status_lifecycle": {
+    "analysis_done": true,
+    "content_layer_done": true,
+    "previs_done": false,
+    "jianying_template_done": false,
+    "ai_preview_done": false,
+    "real_material_done": false,
+    "export_done": false
+  }
+}

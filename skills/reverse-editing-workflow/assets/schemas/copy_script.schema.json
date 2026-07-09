@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reverse-editing.local/schemas/copy_script.schema.json",
+  "title": "Editable copy script",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "project_id",
+    "created_at",
+    "language",
+    "source_files",
+    "copy_policy",
+    "shot_count",
+    "shots"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "content-layer-mvp-v1"
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 1,
+      "examples": ["sample_corner_noodle_reference"]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "language": {
+      "type": "string",
+      "examples": ["zh-CN"]
+    },
+    "target_business_type": {
+      "type": "string",
+      "examples": ["beef_noodle_restaurant"]
+    },
+    "source_files": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "shot_index",
+        "replacement_plan",
+        "shooting_board"
+      ],
+      "properties": {
+        "shot_index": {
+          "type": "string"
+        },
+        "current_preview_manifest": {
+          "type": "string"
+        },
+        "semantic_analysis": {
+          "type": "string"
+        },
+        "replacement_plan": {
+          "type": "string"
+        },
+        "shooting_board": {
+          "type": "string"
+        },
+        "store_profile": {
+          "type": "string"
+        }
+      }
+    },
+    "copy_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference_text_policy",
+        "per_shot_customization_required",
+        "editable_source_required",
+        "forbidden_outputs"
+      ],
+      "properties": {
+        "reference_text_policy": {
+          "type": "string",
+          "const": "extract_structure_only_do_not_copy_original_words"
+        },
+        "per_shot_customization_required": {
+          "type": "boolean",
+          "const": true
+        },
+        "editable_source_required": {
+          "type": "boolean",
+          "const": true
+        },
+        "forbidden_outputs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "burned_in_text_only",
+              "libtv_generated_subtitle_as_final_copy",
+              "copied_reference_video_wording"
+            ]
+          }
+        }
+      }
+    },
+    "versions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "internal_preview",
+          "boss_review",
+          "shooting_guide",
+          "final_publish"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "timeline_source": {
+      "type": "string",
+      "enum": [
+        "shot_index_reviewed",
+        "current_preview_manifest",
+        "voiceover_alignment"
+      ]
+    },
+    "shot_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "shots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/copyShot"
+      }
+    }
+  },
+  "$defs": {
+    "copyShot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "shot_id",
+        "start_ms",
+        "end_ms",
+        "duration_ms",
+        "reference_function",
+        "target_visual_function",
+        "target_message",
+        "copy_intent",
+        "spoken_copy",
+        "subtitle_copy",
+        "editing_notes",
+        "editable",
+        "copy_status"
+      ],
+      "properties": {
+        "shot_id": {
+          "type": "string",
+          "pattern": "^shot_[0-9]{3}$"
+        },
+        "start_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_ms": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "duration_ms": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "reference_function": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_visual_function": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "copy_intent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "spoken_copy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subtitle_copy": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 42
+        },
+        "cta_or_selling_point": {
+          "type": ["string", "null"]
+        },
+        "version": {
+          "type": "string",
+          "enum": [
+            "internal_preview",
+            "boss_review",
+            "shooting_guide",
+            "final_publish"
+          ]
+        },
+        "editing_notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "editable": {
+          "type": "boolean",
+          "const": true
+        },
+        "copy_status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "needs_review",
+            "approved",
+            "rejected"
+          ]
+        }
+      }
+    }
+  }
+}

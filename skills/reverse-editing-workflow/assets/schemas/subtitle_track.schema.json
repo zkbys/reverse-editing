@@ -1,0 +1,293 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reverse-editing.local/schemas/subtitle_track.schema.json",
+  "title": "Editable subtitle track",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "project_id",
+    "created_at",
+    "language",
+    "source_files",
+    "subtitle_policy",
+    "dirty_subtitle_qc_policy",
+    "export_targets",
+    "subtitle_count",
+    "subtitles"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "content-layer-mvp-v1"
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "language": {
+      "type": "string",
+      "examples": ["zh-CN"]
+    },
+    "source_files": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "copy_script",
+        "voiceover_script",
+        "word_timestamps"
+      ],
+      "properties": {
+        "copy_script": {
+          "type": "string"
+        },
+        "voiceover_script": {
+          "type": "string"
+        },
+        "word_timestamps": {
+          "type": "string"
+        },
+        "current_preview_manifest": {
+          "type": "string"
+        },
+        "shot_index": {
+          "type": "string"
+        }
+      }
+    },
+    "subtitle_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "timing_master",
+        "editable_track_required",
+        "burned_in_subtitles_are_not_source",
+        "max_chars_per_caption",
+        "allowed_timing_sources"
+      ],
+      "properties": {
+        "timing_master": {
+          "type": "string",
+          "const": "voiceover_timeline"
+        },
+        "editable_track_required": {
+          "type": "boolean",
+          "const": true
+        },
+        "burned_in_subtitles_are_not_source": {
+          "type": "boolean",
+          "const": true
+        },
+        "max_chars_per_caption": {
+          "type": "integer",
+          "minimum": 8,
+          "maximum": 42
+        },
+        "allowed_timing_sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "voiceover_alignment",
+              "tts_word_boundary",
+              "forced_alignment",
+              "manual_reviewed_alignment",
+              "estimated_placeholder"
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "dirty_subtitle_qc_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "libtv_generated_text_status",
+        "failure_items",
+        "qc_required_before_jianying_insert",
+        "recommended_qc_method"
+      ],
+      "properties": {
+        "libtv_generated_text_status": {
+          "type": "string",
+          "const": "qc_failure_or_known_limitation_not_formal_subtitle"
+        },
+        "failure_items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "model_generated_subtitles",
+              "account_ui",
+              "wrong_store_name",
+              "watermark_or_platform_mark",
+              "unapproved_on_screen_text",
+              "copied_reference_account_info"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "qc_required_before_jianying_insert": {
+          "type": "boolean",
+          "const": true
+        },
+        "recommended_qc_method": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "sample_frames",
+              "ocr_detect_text_boxes",
+              "manual_review_contact_sheet"
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "timeline_source": {
+      "type": "string",
+      "enum": [
+        "shot_index_reviewed",
+        "current_preview_manifest",
+        "voiceover_alignment"
+      ]
+    },
+    "export_targets": {
+      "type": "array",
+      "minItems": 2,
+      "allOf": [
+        {
+          "contains": {
+            "const": "webvtt"
+          }
+        },
+        {
+          "contains": {
+            "const": "srt"
+          }
+        }
+      ],
+      "items": {
+        "type": "string",
+        "enum": [
+          "webvtt",
+          "srt",
+          "jianying_editable_text_track",
+          "preview_review_overlay"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "subtitle_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "subtitles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/subtitleItem"
+      }
+    }
+  },
+  "$defs": {
+    "subtitleItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subtitle_id",
+        "shot_id",
+        "voice_segment_id",
+        "start_ms",
+        "end_ms",
+        "text",
+        "timing_source",
+        "editable",
+        "status"
+      ],
+      "properties": {
+        "subtitle_id": {
+          "type": "string",
+          "pattern": "^sub_[0-9]{3}_[0-9]{2}$"
+        },
+        "shot_id": {
+          "type": "string",
+          "pattern": "^shot_[0-9]{3}$"
+        },
+        "voice_segment_id": {
+          "type": "string",
+          "pattern": "^vo_[0-9]{3}(_[0-9]{2})?$"
+        },
+        "start_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_ms": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 42
+        },
+        "source_words": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "word_start_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "word_end_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "position": {
+          "type": "string",
+          "enum": [
+            "lower_center",
+            "middle_center",
+            "upper_center",
+            "custom"
+          ]
+        },
+        "timing_source": {
+          "type": "string",
+          "enum": [
+            "voiceover_alignment",
+            "tts_word_boundary",
+            "forced_alignment",
+            "manual_reviewed_alignment",
+            "estimated_placeholder"
+          ]
+        },
+        "editable": {
+          "type": "boolean",
+          "const": true
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "estimated",
+            "aligned",
+            "needs_review",
+            "approved",
+            "rejected"
+          ]
+        }
+      }
+    }
+  }
+}

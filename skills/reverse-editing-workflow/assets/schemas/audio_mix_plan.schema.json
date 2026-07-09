@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reverse-editing.local/schemas/audio_mix_plan.schema.json",
+  "title": "Editable audio mix plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "project_id",
+    "created_at",
+    "source_files",
+    "audio_policy",
+    "tracks",
+    "export_targets"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "content-layer-mvp-v1"
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_files": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "voiceover_script",
+        "subtitle_track"
+      ],
+      "properties": {
+        "voiceover_script": {
+          "type": "string"
+        },
+        "voiceover_alignment": {
+          "type": "string"
+        },
+        "subtitle_track": {
+          "type": "string"
+        },
+        "jianying_manifest": {
+          "type": "string"
+        }
+      }
+    },
+    "audio_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "voiceover_is_primary_clock",
+        "libtv_audio_default_policy",
+        "real_footage_audio_policy",
+        "no_tts_generated_in_mvp"
+      ],
+      "properties": {
+        "voiceover_is_primary_clock": {
+          "type": "boolean",
+          "const": true
+        },
+        "libtv_audio_default_policy": {
+          "type": "string",
+          "enum": [
+            "mute",
+            "keep_for_internal_preview_only",
+            "manual_review_required"
+          ]
+        },
+        "real_footage_audio_policy": {
+          "type": "string",
+          "enum": [
+            "mute",
+            "keep_ambient_under_voice",
+            "manual_review_required"
+          ]
+        },
+        "no_tts_generated_in_mvp": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "tracks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "voiceover",
+        "background_music",
+        "original_audio",
+        "sfx"
+      ],
+      "properties": {
+        "voiceover": {
+          "$ref": "#/$defs/audioTrack"
+        },
+        "background_music": {
+          "$ref": "#/$defs/audioTrack"
+        },
+        "original_audio": {
+          "$ref": "#/$defs/audioTrack"
+        },
+        "sfx": {
+          "$ref": "#/$defs/audioTrack"
+        }
+      }
+    },
+    "ducking": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "music_gain_when_voice_db",
+        "attack_ms",
+        "release_ms"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "music_gain_when_voice_db": {
+          "type": "number",
+          "maximum": 0
+        },
+        "attack_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "release_ms": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "loudness_target": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "integrated_lufs": {
+          "type": "number"
+        },
+        "true_peak_db": {
+          "type": "number"
+        }
+      }
+    },
+    "export_targets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "preview_mp4",
+          "jianying_draft",
+          "audio_review_wav",
+          "final_mix_wav"
+        ]
+      },
+      "uniqueItems": true
+    }
+  },
+  "$defs": {
+    "audioTrack": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "source",
+        "gain_db",
+        "status"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "source": {
+          "type": ["string", "null"]
+        },
+        "gain_db": {
+          "type": "number"
+        },
+        "pan": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "placeholder",
+            "ready",
+            "muted",
+            "needs_review",
+            "approved"
+          ]
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
