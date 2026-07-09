@@ -80,6 +80,14 @@ python3 skills/reverse-editing-workflow/scripts/analyze_reference_video.py --pro
 
 This helper requires `ffmpeg` and `ffprobe` on `PATH`. It writes `analysis/video_probe.json`, `analysis/frame_samples/`, `analysis/contact_sheet_4x4.jpg`, `analysis/scene_detect/`, `analysis/video_analysis_manifest.json`, and `reports/video_analysis_report.json`. It must not download, install dependencies, generate video, call TTS, or modify Jianying drafts.
 
+Validate the reviewed shot index before storyboard/previs or generation:
+
+```bash
+python3 skills/reverse-editing-workflow/scripts/validate_shot_index.py --project-dir <project_dir>
+```
+
+This writes `reports/shot_index_validation.json`. Treat `errors` as blockers; treat `warnings` as human-review items before LibTV, TTS, or Jianying draft work.
+
 ## Low-Fidelity Previs
 
 After `analysis/shot_index.reviewed.json`, `storyboard/storyboard.json`, and `previs/previs_plan.json` exist, render a local static HTML review page:

@@ -59,6 +59,16 @@ python3 skills/reverse-editing-workflow/scripts/analyze_reference_video.py --pro
 
 This requires `ffmpeg/ffprobe` already installed. Do not install them without explicit user approval.
 
+## Shot Index Validation
+
+After drafting `analysis/shot_index.reviewed.json`, run:
+
+```bash
+python3 skills/reverse-editing-workflow/scripts/validate_shot_index.py --project-dir <project_dir>
+```
+
+Block on `errors`. Carry `warnings` into the loop report for human review.
+
 ## Previs Rendering
 
 After `analysis/shot_index.reviewed.json`, `storyboard/storyboard.json`, and `previs/previs_plan.json` exist, generate a local static review page:

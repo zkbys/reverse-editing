@@ -89,6 +89,13 @@ python3 skills/reverse-editing-workflow/scripts/analyze_reference_video.py \
   --force
 ```
 
+已有 `analysis/shot_index.reviewed.json` 后，先校验镜头连续性和 evidence 链接：
+
+```bash
+python3 skills/reverse-editing-workflow/scripts/validate_shot_index.py \
+  --project-dir outputs/<project_id>
+```
+
 校验内容层并导出 VTT/SRT：
 
 ```bash

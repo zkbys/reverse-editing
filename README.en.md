@@ -62,6 +62,12 @@ When an authorized local video already exists in a project, run local analysis w
 python3 skills/reverse-editing-workflow/scripts/analyze_reference_video.py --project-dir outputs/<project_id> --force
 ```
 
+After `analysis/shot_index.reviewed.json` exists, validate continuity and evidence links:
+
+```bash
+python3 skills/reverse-editing-workflow/scripts/validate_shot_index.py --project-dir outputs/<project_id>
+```
+
 After a project has `analysis/shot_index.reviewed.json`, `storyboard/storyboard.json`, and `previs/previs_plan.json`, render a local low-fidelity previs page:
 
 ```bash
