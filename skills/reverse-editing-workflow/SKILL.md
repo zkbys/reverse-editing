@@ -1,60 +1,80 @@
 ---
 name: reverse-editing-workflow
-description: "Reverse-editing workflow for turning a short-form reference video into a reusable project package: intake contract, project_id isolation, shot/storyboard planning, editable copy/voiceover/subtitle/audio control layers, optional storyboard/previs handoff, Jianying manifest planning, dirty-subtitle QC, and validation reports. Use when a user asks Codex to process a restaurant/store/product short video reference, install or use the reverse-editing workflow, create a same-structure remake plan, prepare editable subtitles/voiceover, or generate a safe local workflow package before any LibTV, TTS, download, or Jianying draft modification."
+description: "Turn a short-form reference video into an isolated, editable reverse-editing project: intake and project_id contracts, shot analysis, storyboard/previs, editable copy/voiceover/subtitle/audio layers with VTT/SRT, local Tesseract plus human visual QC, auditable internal-preview overrides/placeholders, and guarded N-slot Jianying seed-clone validation. Use for store, restaurant, product, or creator reference videos; same-structure remake planning; internal shooting previews; editable subtitle/voiceover preparation; or safe local workflow packaging before any download, LibTV, TTS, OCR installation, or Jianying mutation."
 ---
 
 # Reverse Editing Workflow
 
-## Mode
+## Operating mode
 
-Run this workflow as small loops. Each loop must declare input, action, forbidden actions, acceptance criteria, artifacts, validation, and retrospective before moving to the next loop.
+Work in small Loop Engineering cycles. Every loop report must contain, in order:
 
-Default to local files, schemas, manifests, and reports. Do not jump to remote generation or draft mutation.
+1. `目标`
+2. `输入`
+3. `动作`
+4. `禁止事项`
+5. `验收标准`
+6. `产物`
+7. `验证`
+8. `复盘`
+9. `下一轮`
 
-## First Action
+Advance autonomously through safe local/read-only loops. Stop only for a real blocker or for authority that the user has not granted.
 
-For a new request, create or validate an intake file first:
+## Default-deny boundary
 
-```bash
-python3 skills/reverse-editing-workflow/scripts/validate_intake.py --intake <intake.json>
-```
+Unless the user explicitly authorizes the current loop, do not:
 
-If the user provides only a video URL, fill `assets/new_reference_intake.template.json` with the URL and keep download disabled unless explicitly authorized.
-
-## Safe Project Setup
-
-Dry-run project initialization before creating files:
-
-```bash
-python3 skills/reverse-editing-workflow/scripts/init_project.py --intake <intake.json> --output-root outputs --report outputs/init_dry_run.json
-```
-
-Create the project only after the intake is ready:
-
-```bash
-python3 skills/reverse-editing-workflow/scripts/init_project.py --intake <intake.json> --output-root outputs --create
-```
-
-Each reference video must have its own `project_id` and output directory.
-
-## Hard Boundaries
-
-Unless the current loop and user explicitly authorize it, do not:
-
-- Run LibTV or other remote video generation.
-- Download a URL.
-- Call TTS or paid voice services.
-- Install OCR dependencies.
-- Modify existing Jianying drafts.
-- Delete, move, or rename existing user artifacts.
-- Treat burned-in or model-generated frame text as formal subtitles.
+- Download a URL or reference video.
+- Run LibTV or any remote video generation.
+- Call TTS, paid voice, or paid OCR services.
+- Install Tesseract, OCR language data, FFmpeg, or other system dependencies.
+- Create, clone, register, or modify any Jianying draft.
+- Delete, move, rename, or overwrite existing user artifacts.
+- Burn subtitles or voiceover into preview media.
+- Treat model-generated in-frame text as formal subtitles.
 - Copy reference-video wording as final copy.
+- Upload reference media, generated media, Jianying drafts, screenshots, project outputs, local absolute paths, account data, secrets, or experiment logs.
 
-Use `scripts/download_reference_optional.py` only when the user explicitly allows downloading.
+Authorization is loop-specific. Prior authorization does not silently carry into a later download, generation, TTS, OCR-install, or Jianying-write loop.
 
-## Content Layer
+## 1. Intake and isolated project
 
-Keep copy, voiceover, subtitles, word timestamps, and audio planning editable:
+Validate intake first:
+
+```bash
+python3 scripts/validate_intake.py --intake <intake.json>
+```
+
+Dry-run initialization, then create only when intake readiness and the output path are accepted:
+
+```bash
+python3 scripts/init_project.py --intake <intake.json> --output-root outputs --report <dry-run-report.json>
+python3 scripts/init_project.py --intake <intake.json> --output-root outputs --create
+```
+
+Give every reference its own `project_id` and `outputs/<project_id>/` directory. Never mix two references unless the user explicitly requests a comparison project.
+
+## 2. Shot structure, storyboard, and previs
+
+When an already-authorized local source exists, run deterministic analysis:
+
+```bash
+python3 scripts/analyze_reference_video.py --project-dir <project_dir> --force
+python3 scripts/validate_shot_index.py --project-dir <project_dir>
+```
+
+Treat shot-index errors as blockers and warnings as human-review items. After reviewed `shot_index`, `storyboard`, and `previs_plan` exist, render the local review page:
+
+```bash
+python3 scripts/render_previs_html.py --project-dir <project_dir> --force
+```
+
+Reference frames and HTML previs are internal structural evidence, not publishable media.
+
+## 3. Editable content layer
+
+Keep these source-of-truth files outside rendered video and Jianying:
 
 - `content/copy_script.json`
 - `content/voiceover_script.json`
@@ -65,49 +85,95 @@ Keep copy, voiceover, subtitles, word timestamps, and audio planning editable:
 Validate and export review subtitles:
 
 ```bash
-python3 skills/reverse-editing-workflow/scripts/validate_content_layer.py --project-dir <project_dir>
+python3 scripts/validate_content_layer.py --project-dir <project_dir>
 ```
 
-VTT/SRT exports are review artifacts. They are not approval to burn subtitles into video or write a Jianying draft.
+VTT/SRT export does not authorize subtitle burn-in, TTS, or Jianying insertion.
 
-## Local Video Analysis
+## 4. Visual OCR and human QC
 
-When a local source video is already authorized and available in the project, run deterministic local analysis before drafting shot boundaries:
+Read `references/dirty_subtitle_qc.md` before media admission. Use existing local FFmpeg/Tesseract only; never install them implicitly.
 
 ```bash
-python3 skills/reverse-editing-workflow/scripts/analyze_reference_video.py --project-dir <project_dir> --force
+python3 scripts/visual_ocr_qc.py --project-dir <project_dir>
+# Human edits quality/visual_ocr_qc/manual_visual_review.json after viewing every contact sheet.
+python3 scripts/validate_visual_qc.py --project-dir <project_dir>
 ```
 
-This helper requires `ffmpeg` and `ffprobe` on `PATH`. It writes `analysis/video_probe.json`, `analysis/frame_samples/`, `analysis/contact_sheet_4x4.jpg`, `analysis/scene_detect/`, `analysis/video_analysis_manifest.json`, and `reports/video_analysis_report.json`. It must not download, install dependencies, generate video, call TTS, or modify Jianying drafts.
+OCR output is candidate evidence. A human contact-sheet review is mandatory, and OCR silence never proves that a frame has no text.
 
-Validate the reviewed shot index before storyboard/previs or generation:
+If the user accepts failed shots for internal preview, preserve the original report and append a scoped audit record:
 
 ```bash
-python3 skills/reverse-editing-workflow/scripts/validate_shot_index.py --project-dir <project_dir>
+python3 scripts/record_qc_override.py \
+  --project-dir <project_dir> \
+  --shot-id <shot_id> \
+  --authorized-by user \
+  --reason "<decision reason>" \
+  --authorize-internal-preview-only
 ```
 
-This writes `reports/shot_index_validation.json`. Treat `errors` as blockers; treat `warnings` as human-review items before LibTV, TTS, or Jianying draft work.
+An override can unblock an internal preview only. It never creates publish readiness.
 
-## Low-Fidelity Previs
+## 5. Local non-publish placeholders
 
-After `analysis/shot_index.reviewed.json`, `storyboard/storyboard.json`, and `previs/previs_plan.json` exist, render a local static HTML review page:
+Use a local placeholder only when a required internal-preview slot has no admissible media and the loop explicitly accepts that fallback. The placeholder must be visibly marked internal-only, recorded in `manual_visual_review.json`, stored inside the project, and kept `publish_ready=false`. Never describe it as a delivered ending.
+
+## 6. Guarded N-slot Jianying internal previs
+
+Read `references/jianying_boundaries.md` before this stage. Derive slot count `N` from the current video's reviewed `manifest.plan.json`; never hardcode 17. The 17-slot case is a regression example, not a workflow rule.
+
+Build and validate without writing Jianying:
 
 ```bash
-python3 skills/reverse-editing-workflow/scripts/render_previs_html.py --project-dir <project_dir> --force
+python3 scripts/build_jianying_manifest.py \
+  --project-dir <project_dir> \
+  --seed-draft <read-only-seed> \
+  --output-root <jianying-draft-root> \
+  --draft-name <new-unique-name> \
+  --output <project_dir>/jianying_manifest/multi_slot_manifest.json
+
+python3 scripts/validate_jianying_seed.py \
+  --manifest <multi_slot_manifest.json> \
+  --seed-draft <read-only-seed> \
+  --output <seed-validation.json>
 ```
 
-The renderer writes `previs/index.html`, `previs/previs_manifest.json`, and `reports/previs_html_render_report.json`. It must stay local-only: reference frames are for structure review, not publishable media.
+Only after explicit Jianying-write authorization, create a collision-free new clone and adapt clone-local media:
+
+```bash
+python3 scripts/clone_jianying_seed.py --manifest <manifest.json> --seed-validation <seed-validation.json> --output <clone-report.json> --authorize-jianying-write
+python3 scripts/shift_jianying_timeline.py --draft <new-clone> --manifest <manifest.json> --clone-manifest <clone-report.json> --output <shift-report.json> --authorize-jianying-write
+python3 scripts/fit_jianying_clone_slots.py --manifest <manifest.json> --clone-manifest <clone-report.json> --output <fit-report.json> --authorize-jianying-write
+```
+
+Never point mutation helpers at the seed or an existing working draft. Short clips may be padded by freezing only the clone-local final frame; source files must remain hash-identical.
+
+## 7. File and GUI evidence levels
+
+Run file-level validation first:
+
+```bash
+python3 scripts/validate_jianying_draft.py \
+  --manifest <manifest.json> \
+  --clone-manifest <clone-report.json> \
+  --shift-manifest <shift-report.json> \
+  --fit-manifest <fit-report.json> \
+  --output <file-validation.json>
+```
+
+Then separately record GUI evidence with `record_jianying_gui_validation.py`. Match the observed segment count to the current video's `N`. Keep `user_report`, `screenshots`, and `screen_recording` evidence levels distinct. File-level or GUI playback pass proves internal-preview usability only; it does not prove export quality or publish readiness.
 
 ## References
 
-Load only what the current loop needs:
+Load only the current loop's reference:
 
-- `references/project_contracts.md`: project_id, directory, and artifact boundaries.
-- `references/content_layer_contract.md`: editable copy/voiceover/subtitle/audio rules.
-- `references/dirty_subtitle_qc.md`: text-in-frame risk policy.
-- `references/jianying_boundaries.md`: Jianying draft safety and evidence levels.
-- `references/loop_engineering.md`: required loop report format.
+- `references/project_contracts.md` — project isolation and release hygiene.
+- `references/content_layer_contract.md` — editable copy/voiceover/subtitle/audio rules.
+- `references/dirty_subtitle_qc.md` — Tesseract, contact sheets, manual decisions, override audit, placeholders.
+- `references/jianying_boundaries.md` — N-slot clone safety, duration fitting, and evidence levels.
+- `references/loop_engineering.md` — required report structure.
 
-## Current Status
+## Validated status
 
-This is an alpha workflow package. It is safe for local intake, project setup, schema validation, content-layer validation, and static HTML previs rendering. Real video analysis, LibTV generation, TTS, OCR installation, and Jianying draft modification remain explicit follow-up loops.
+The package has passed a second real-reference forward test through storyboard/previs, editable content, local OCR plus human QC, audited override, seed clone, clone-local short-clip fitting, file validation, and full GUI playback. That evidence remains internal-preview evidence. Clean-package regression covers both the validated 17-slot case and a non-17 case to ensure slot count stays video-specific.

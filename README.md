@@ -2,31 +2,23 @@
 
 语言 / Language: 中文 | [English](README.en.md)
 
-> Alpha preview. This repository packages a local-first reverse-editing workflow as a Codex Skill plus Claude Code instructions.
+> Local-first Codex Skill + Claude Code workflow for turning a short-video reference into an editable internal production package.
 
-## 这个项目是什么
+## 能做什么
 
-`reverse-editing-workflow` 用来把一个短视频参考拆成可复用的工作流包：
+`reverse-editing-workflow` 将每条参考视频隔离成独立 `project_id`，并通过小闭环生成和验证：
 
-- intake 合同
-- 独立 `project_id`
-- 镜头结构 / storyboard / previs 计划
-- 可编辑文案、配音稿、字幕轨、词级时间、音频计划
-- 可导入剪映前的 manifest 规划
-- 脏字幕 / 画面文字质检边界
-- 本地 validation 报告
+- 参考 intake、视频分析、镜头结构
+- storyboard / HTML previs
+- 可编辑 copy、voiceover、subtitle、word timing、audio plan
+- WebVTT / SRT 导出
+- Tesseract 抽帧 OCR + 人工 contact sheet 复核
+- 人工 QC override 审计与本地非发布占位记录
+- 按当前视频动态推导的 N-slot 剪映 seed clone
+- clone-local 短素材末帧延长
+- 文件级、用户报告、截图、录屏四种诚实验收层级
 
-当前版本重点是工作流骨架和可编辑控制层。默认不下载视频、不跑远程生成、不调用 TTS、不修改剪映草稿。
-
-## 仓库结构
-
-```text
-skills/reverse-editing-workflow/   Codex Skill
-samples/fake-corner-noodle/        完全虚构 sample project
-CLAUDE.md                          Claude Code 使用入口
-README.en.md                       English README
-requirements.txt                   Python validation dependency
-```
+`17-slot` 是一次真实 forward test 和回归样本，不是固定规则；不同视频按自己的 storyboard/previs 决定 N。
 
 ## 安装成 Codex Skill
 
@@ -36,102 +28,60 @@ mkdir -p ~/.codex/skills
 cp -R reverse-editing/skills/reverse-editing-workflow ~/.codex/skills/
 ```
 
-重启 Codex 后，可以这样使用：
+重启 Codex 后调用：
 
 ```text
-Use $reverse-editing-workflow to process this reference video as a safe local workflow package: <video link or local file>
+Use $reverse-editing-workflow to process this reference as a safe local editable workflow package. Keep download, LibTV, TTS, OCR installation, and Jianying writes disabled until I explicitly authorize the current loop.
 ```
 
-## Claude Code 使用方式
+## Claude Code 入口
 
-Clone 仓库后，让 Claude Code 先读：
+Clone 仓库后先读：
 
 ```text
 CLAUDE.md
 skills/reverse-editing-workflow/SKILL.md
 ```
 
-然后给它一个任务：
-
-```text
-Use the reverse-editing workflow to process this reference video URL. Keep download disabled until I explicitly authorize it.
-```
-
-## 本地体验 sample
-
-安装依赖：
+## 本地 sample
 
 ```bash
 pip install -r requirements.txt
-```
-
-校验 intake：
-
-```bash
 python3 skills/reverse-editing-workflow/scripts/validate_intake.py \
   --intake samples/fake-corner-noodle/intake.json
-```
-
-dry-run 初始化：
-
-```bash
 python3 skills/reverse-editing-workflow/scripts/init_project.py \
   --intake samples/fake-corner-noodle/intake.json \
   --output-root /tmp/reverse-editing-demo \
   --report /tmp/reverse-editing-demo-init.json
-```
-
-当项目内已有授权本地视频时，可以运行本地分析（需要系统已有 `ffmpeg/ffprobe`）：
-
-```bash
-python3 skills/reverse-editing-workflow/scripts/analyze_reference_video.py \
-  --project-dir outputs/<project_id> \
-  --force
-```
-
-已有 `analysis/shot_index.reviewed.json` 后，先校验镜头连续性和 evidence 链接：
-
-```bash
-python3 skills/reverse-editing-workflow/scripts/validate_shot_index.py \
-  --project-dir outputs/<project_id>
-```
-
-校验内容层并导出 VTT/SRT：
-
-```bash
 python3 skills/reverse-editing-workflow/scripts/validate_content_layer.py \
-  --project-dir samples/fake-corner-noodle
+  --project-dir samples/fake-corner-noodle --force
 ```
 
-当某个项目已经有 `analysis/shot_index.reviewed.json`、`storyboard/storyboard.json` 和 `previs/previs_plan.json` 后，可以生成本地低保真预演页：
+运行完整隔离 smoke（需要本机已有 `ffmpeg/ffprobe`；Tesseract 缺失时会保留 OCR gap，不会自动安装）：
 
 ```bash
-python3 skills/reverse-editing-workflow/scripts/render_previs_html.py \
-  --project-dir outputs/<project_id> \
-  --force
+python3 tests/run_clean_package_smoke.py
 ```
+
+该 smoke 将 Skill 安装到临时目录，验证 intake、内容层、VTT/SRT、视觉 QC、人工 override、Jianying 默认拒绝写入、17-slot 回归和 5-slot 动态场景。所有草稿和媒体均为临时合成 fixture，不触碰真实剪映目录。
 
 ## 默认安全边界
 
-除非你明确授权，否则 workflow 不应该：
+除非用户对当前 loop 明确授权，否则禁止：
 
 - 下载参考视频
-- 运行 LibTV 或其他远程视频生成
-- 调用 TTS / 配音服务
-- 安装 OCR
-- 修改剪映草稿
-- 把画面里的脏字幕当正式字幕
-- 把参考视频原文复制成最终文案
+- 运行 LibTV / 远程视频生成
+- 调用 TTS、付费配音或付费 OCR
+- 安装 OCR / FFmpeg 依赖
+- 创建、注册或修改剪映草稿
+- 烧入字幕或配音
+- 上传真实视频、生成视频、剪映草稿、截图、outputs、本机路径、账号信息、密钥或实验过程
 
-## 当前状态
+任何 OCR、人工 override、文件校验或 GUI 播放通过，都不能把内部预演升级成发布素材。
 
-这是 `alpha` 版本。它适合体验 intake、project setup、schema validation、可编辑内容层、静态 HTML previs 和 sample 项目结构。
+## 状态
 
-尚未完成：
-
-- 真实视频链接到 storyboard/previs 的完整自动链路
-- 第二个真实参考视频 forward test
-- 真实 LibTV/TTS/OCR/Jianying 修改执行路径
+当前包已经通过第二条真实参考视频 forward test，并完成干净包的 17-slot 与非 17-slot 回归。发布仓库只包含通用 Skill、虚构 sample 和合成测试，不包含真实参考资产或项目 outputs。
 
 ## License
 

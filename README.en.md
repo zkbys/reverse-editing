@@ -2,21 +2,23 @@
 
 Language: [中文](README.md) | English
 
-> Alpha preview. This repository packages a local-first reverse-editing workflow as a Codex Skill plus Claude Code instructions.
+> A local-first Codex Skill and Claude Code workflow that turns a short-video reference into an editable internal production package.
 
-## What It Does
+## What it covers
 
-`reverse-editing-workflow` turns a short-form reference video into an editable workflow package:
+Each reference gets an isolated `project_id` and a small-loop workflow for:
 
-- intake contract
-- isolated `project_id`
-- shot structure, storyboard, and previs planning
-- editable copy, voiceover, subtitle, word-timing, and audio-mix control layers
-- Jianying/CutCap manifest planning before draft mutation
-- dirty-subtitle and in-frame text QC boundaries
-- local validation reports
+- intake, local video analysis, and reviewed shot structure
+- storyboard and HTML previs
+- editable copy, voiceover, subtitle, word-timing, and audio plans
+- WebVTT and SRT export
+- Tesseract frame OCR plus mandatory human contact-sheet review
+- auditable human QC overrides and local non-publish placeholders
+- Jianying seed clones with a video-specific dynamic slot count `N`
+- clone-local final-frame padding for short media
+- distinct file, user-report, screenshot, and screen-recording evidence levels
 
-The current version focuses on the workflow skeleton and editable control layer. By default it does not download videos, run remote generation, call TTS, or modify Jianying drafts.
+The validated 17-slot draft is a regression case, not a fixed workflow rule. Every video derives `N` from its own reviewed storyboard/previs plan.
 
 ## Install as a Codex Skill
 
@@ -29,72 +31,57 @@ cp -R reverse-editing/skills/reverse-editing-workflow ~/.codex/skills/
 Restart Codex, then ask:
 
 ```text
-Use $reverse-editing-workflow to process this reference video as a safe local workflow package: <video link or local file>
+Use $reverse-editing-workflow to process this reference as a safe local editable workflow package. Keep download, LibTV, TTS, OCR installation, and Jianying writes disabled until I explicitly authorize the current loop.
 ```
 
 ## Claude Code
 
-Clone the repo, then ask Claude Code to read:
+Clone the repository, then read:
 
 ```text
 CLAUDE.md
 skills/reverse-editing-workflow/SKILL.md
 ```
 
-Example prompt:
-
-```text
-Use the reverse-editing workflow to process this reference video URL. Keep download disabled until I explicitly authorize it.
-```
-
-## Try the Sample
+## Local sample
 
 ```bash
 pip install -r requirements.txt
-python3 skills/reverse-editing-workflow/scripts/validate_intake.py --intake samples/fake-corner-noodle/intake.json
-python3 skills/reverse-editing-workflow/scripts/init_project.py --intake samples/fake-corner-noodle/intake.json --output-root /tmp/reverse-editing-demo --report /tmp/reverse-editing-demo-init.json
-python3 skills/reverse-editing-workflow/scripts/validate_content_layer.py --project-dir samples/fake-corner-noodle
+python3 skills/reverse-editing-workflow/scripts/validate_intake.py \
+  --intake samples/fake-corner-noodle/intake.json
+python3 skills/reverse-editing-workflow/scripts/init_project.py \
+  --intake samples/fake-corner-noodle/intake.json \
+  --output-root /tmp/reverse-editing-demo \
+  --report /tmp/reverse-editing-demo-init.json
+python3 skills/reverse-editing-workflow/scripts/validate_content_layer.py \
+  --project-dir samples/fake-corner-noodle --force
 ```
 
-When an authorized local video already exists in a project, run local analysis with system `ffmpeg/ffprobe`:
+Run the isolated package smoke test with existing local `ffmpeg/ffprobe`. A missing Tesseract installation is recorded as an OCR gap and is never installed automatically.
 
 ```bash
-python3 skills/reverse-editing-workflow/scripts/analyze_reference_video.py --project-dir outputs/<project_id> --force
+python3 tests/run_clean_package_smoke.py
 ```
 
-After `analysis/shot_index.reviewed.json` exists, validate continuity and evidence links:
+The smoke test installs the Skill into a temporary directory and exercises intake, editable content, visual QC, override auditing, the default-deny Jianying guard, the 17-slot regression, and a dynamic 5-slot case. It never touches a real Jianying directory.
 
-```bash
-python3 skills/reverse-editing-workflow/scripts/validate_shot_index.py --project-dir outputs/<project_id>
-```
+## Default safety boundary
 
-After a project has `analysis/shot_index.reviewed.json`, `storyboard/storyboard.json`, and `previs/previs_plan.json`, render a local low-fidelity previs page:
-
-```bash
-python3 skills/reverse-editing-workflow/scripts/render_previs_html.py --project-dir outputs/<project_id> --force
-```
-
-## Safety Defaults
-
-Unless explicitly authorized, the workflow should not:
+Without explicit authorization for the current loop, do not:
 
 - download a reference video
 - run LibTV or remote video generation
-- call TTS or voice services
-- install OCR
-- modify Jianying drafts
-- treat dirty in-frame text as formal subtitles
-- copy reference-video wording as final copy
+- call TTS, paid voice, or paid OCR services
+- install OCR or FFmpeg dependencies
+- create, register, or modify Jianying drafts
+- burn subtitles or voiceover
+- upload real/generated media, Jianying drafts, screenshots, project outputs, local paths, account data, secrets, or experiments
+
+OCR, a human override, file validation, or GUI playback can admit an internal preview. None of them creates publish readiness.
 
 ## Status
 
-Alpha. Good for intake, project setup, schema validation, editable control-layer checks, static HTML previs, and sample exploration.
-
-Not complete yet:
-
-- full video URL to storyboard/previs automation
-- second real-reference forward test
-- real LibTV/TTS/OCR/Jianying mutation execution path
+The package has passed a second real-reference forward test plus clean-package regression for both the validated 17-slot case and a non-17 case. The public repository contains only generic Skill files, a fictional sample, and synthetic tests.
 
 ## License
 

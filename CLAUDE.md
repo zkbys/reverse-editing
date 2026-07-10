@@ -5,76 +5,77 @@ Use this repository as a local-first reverse-editing workflow package.
 Before acting, read:
 
 1. `skills/reverse-editing-workflow/SKILL.md`
-2. The relevant file in `skills/reverse-editing-workflow/references/`
+2. The one relevant file under `skills/reverse-editing-workflow/references/`
 
-## Operating Rules
+## Loop Engineering
 
-Work in small loops:
+Work in bounded loops. Every loop report must contain:
 
-- one target
-- declared inputs
-- concrete actions
-- forbidden actions
-- acceptance criteria
-- checkable artifacts
-- validation
-- retrospective
+1. 目标
+2. 输入
+3. 动作
+4. 禁止事项
+5. 验收标准
+6. 产物
+7. 验证
+8. 复盘
+9. 下一轮
 
-## Default Forbidden Actions
+Advance through safe local/read-only loops without repeated confirmation. Stop before any action that needs authority the user has not granted.
+
+## Default-deny actions
 
 Do not perform these unless the user explicitly authorizes the current loop:
 
-- download a URL
+- download a URL or reference video
 - run LibTV or remote video generation
-- call TTS or paid voice services
-- install OCR dependencies
-- modify existing Jianying drafts
-- delete, move, or rename user artifacts
-- copy reference-video wording as final copy
-- treat generated in-frame text as formal subtitles
+- call TTS, paid voice, or paid OCR
+- install OCR, FFmpeg, or other system dependencies
+- create, clone, register, or modify a Jianying draft
+- delete, move, rename, or overwrite existing user artifacts
+- burn subtitles/voiceover into preview media
+- copy reference wording as final copy
+- upload real media, Jianying drafts, screenshots, project outputs, local paths, account data, secrets, or experiments
 
-## First Workflow Step
+## Core route
 
-For a new reference video, create or validate an intake file:
+1. Validate intake and create an independent `project_id` directory.
+2. Analyze an already-authorized local source; validate shot boundaries.
+3. Produce storyboard/previs.
+4. Keep copy, voiceover, subtitle, word timing, and audio plans editable; export VTT/SRT.
+5. Run existing local Tesseract plus mandatory human contact-sheet review.
+6. Preserve original QC findings; append internal-preview-only override records when explicitly authorized.
+7. Record any local placeholder as visibly internal-only and never publish-ready.
+8. Derive Jianying slot count `N` from the current video's reviewed plan; never hardcode 17.
+9. Validate the seed read-only before any authorized new-clone write.
+10. Keep file-level and GUI evidence levels separate, and never describe an internal previs as a publish result.
+
+## Start commands
 
 ```bash
 python3 skills/reverse-editing-workflow/scripts/validate_intake.py --intake <intake.json>
+python3 skills/reverse-editing-workflow/scripts/init_project.py --intake <intake.json> --output-root outputs --report <dry-run-report.json>
 ```
 
-Then dry-run project initialization:
-
-```bash
-python3 skills/reverse-editing-workflow/scripts/init_project.py --intake <intake.json> --output-root outputs --report outputs/init_dry_run.json
-```
-
-Create a real project directory only after the intake is ready and the user agrees.
-
-## Local Video Analysis
-
-When a local video has been explicitly authorized and copied into the project, run:
+For an already-authorized local video:
 
 ```bash
 python3 skills/reverse-editing-workflow/scripts/analyze_reference_video.py --project-dir <project_dir> --force
-```
-
-This requires `ffmpeg/ffprobe` already installed. Do not install them without explicit user approval.
-
-## Shot Index Validation
-
-After drafting `analysis/shot_index.reviewed.json`, run:
-
-```bash
 python3 skills/reverse-editing-workflow/scripts/validate_shot_index.py --project-dir <project_dir>
 ```
 
-Block on `errors`. Carry `warnings` into the loop report for human review.
-
-## Previs Rendering
-
-After `analysis/shot_index.reviewed.json`, `storyboard/storyboard.json`, and `previs/previs_plan.json` exist, generate a local static review page:
+For editable content and review subtitles:
 
 ```bash
-python3 skills/reverse-editing-workflow/scripts/render_previs_html.py --project-dir <project_dir> --force
+python3 skills/reverse-editing-workflow/scripts/validate_content_layer.py --project-dir <project_dir>
 ```
 
-The generated HTML is an internal review artifact only. Do not treat reference frames as publishable media.
+For visual QC:
+
+```bash
+python3 skills/reverse-editing-workflow/scripts/visual_ocr_qc.py --project-dir <project_dir>
+# Complete manual_visual_review.json after viewing every contact sheet.
+python3 skills/reverse-editing-workflow/scripts/validate_visual_qc.py --project-dir <project_dir>
+```
+
+Read `SKILL.md` and `references/jianying_boundaries.md` for guarded N-slot Jianying commands. Never add `--authorize-jianying-write` unless the user explicitly authorized that loop and its new draft target.

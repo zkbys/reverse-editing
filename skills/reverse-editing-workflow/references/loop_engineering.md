@@ -1,48 +1,43 @@
 # Loop Engineering
 
-## Loop Shape
+## Required loop report
 
-Each loop solves one problem and leaves a durable artifact.
+Every loop solves one bounded problem and records these sections in order:
 
-Required sections:
+1. `目标` — one concrete problem.
+2. `输入` — exact source artifacts and granted authority.
+3. `动作` — work actually performed.
+4. `禁止事项` — boundaries preserved in this loop.
+5. `验收标准` — checkable pass conditions declared before completion.
+6. `产物` — durable files or records.
+7. `验证` — commands, checks, and observed results.
+8. `复盘` — completed, incomplete, and remaining risk.
+9. `下一轮` — the next single bounded target.
 
-- `目标`
-- `输入`
-- `动作`
-- `禁止事项`
-- `验收标准`
-- `产物`
-- `复盘`
+## Good loop targets
 
-## Good Loop Targets
+- validate an intake or create an isolated project
+- review a shot index
+- produce storyboard/previs artifacts
+- validate/export editable VTT/SRT
+- sample frames and build OCR/contact-sheet evidence
+- finish human visual QC
+- record one human override or placeholder decision
+- validate an N-slot seed
+- create a new authorized clone
+- complete file-level validation
+- record GUI evidence at its honest level
+- run clean-package or fresh-install regression
 
-Good targets are small enough to verify locally:
+## Poor loop targets
 
-- create a schema
-- instantiate a control-layer JSON
-- export VTT/SRT
-- sample dirty-subtitle frames
-- record a user-reported validation
-- build a dry-run project initializer
-- create a checklist
-- update the status manifest
-- draft a local Skill skeleton
+- download, analyze, generate, call TTS, mutate Jianying, and publish in one loop
+- replace manual review with OCR inference
+- turn an internal preview into a publish claim
+- carry a previous loop's authorization into a new external action
 
-## Poor Loop Targets
+## Retrospective
 
-Avoid mixing large tasks:
+State what completed, what did not, what risk remains, and why the next loop is the smallest useful continuation. When a dependency is missing, name it and state whether installation or use requires new authorization.
 
-- analyze a new reference, generate video, write copy, call TTS, and modify Jianying in one loop
-- create final publish material from unreviewed preview assets
-- replace manual review with inferred success
-
-## Retrospective Rules
-
-The retrospective must say:
-
-- what was completed
-- what was not completed
-- what risk remains
-- what the next loop should do
-
-If a dependency is missing, record the exact dependency and whether installing or using it would require explicit user authorization.
+Synchronize the durable report and queue/status JSON after every loop so the workflow can resume without reconstructing state from chat.

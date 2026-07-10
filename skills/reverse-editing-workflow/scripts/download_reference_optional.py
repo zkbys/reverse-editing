@@ -45,6 +45,8 @@ def main() -> None:
         "status": "skipped_until_explicit_allow_download",
     }
     if args.allow_download:
+        if args.output.exists():
+            raise SystemExit(f"refusing to overwrite existing download target: {args.output}")
         args.output.parent.mkdir(parents=True, exist_ok=True)
         urllib.request.urlretrieve(args.url, args.output)
         report["download_performed"] = True

@@ -1,10 +1,6 @@
-# Content Layer Contract
+# Editable Content Layer Contract
 
-## Purpose
-
-The content layer keeps copy, voiceover, subtitles, word timing, and audio planning editable before any final render, TTS call, or Jianying import.
-
-## Required Files
+## Required source files
 
 - `content/copy_script.json`
 - `content/voiceover_script.json`
@@ -12,43 +8,28 @@ The content layer keeps copy, voiceover, subtitles, word timing, and audio plann
 - `subtitles/word_timestamps.json`
 - `audio/audio_mix_plan.json`
 
-Schema candidates live in `assets/schemas/`.
+Keep these files editable and outside rendered video and Jianying. They remain the source of truth even after an internal preview draft exists.
 
-## Copy Rules
+## Copy and voiceover
 
-Copy must be customized per `shot_id`. It should describe the replacement store, owner, product, and shot intent, not copy the original reference wording.
+Customize copy by `shot_id` for the target business. Do not copy reference-video wording as final copy. Record missing facts as blockers or explicit placeholders; do not invent them.
 
-Every shot should be reviewable independently. Missing store facts should be recorded as blockers or placeholders, not filled with invented facts.
+Keep voiceover text editable. Estimated timing must be labeled `estimated_placeholder`. Do not call TTS or generate audio without explicit authorization for the current loop.
 
-## Voiceover Rules
+## Subtitles and word timing
 
-Voiceover text must remain editable in JSON and Markdown review formats. Do not generate audio unless the loop explicitly authorizes TTS or the user provides human-recorded audio.
-
-Estimated timing is allowed only as `estimated_placeholder`. It is not final voiceover alignment.
-
-## Subtitle Rules
-
-Subtitles must follow the voiceover timeline and must export to WebVTT and SRT.
-
-Valid subtitle exports are intermediate artifacts. They do not mean the subtitles should be burned into the video or written into a Jianying draft by default.
-
-## Audio Rules
-
-`audio_mix_plan.json` should separate:
-
-- voiceover track
-- original video audio
-- background music
-- effects or ambience
-
-In MVP loops, set voiceover generation to disabled and record `no_tts_generated_in_mvp=true`.
-
-## Validation
-
-Run the local validator after changing content-layer files:
+Follow the voiceover timeline and export both WebVTT and SRT:
 
 ```bash
-python3 scripts/validate_and_export_content_layer.py --project-dir outputs/<project_id> --date-stamp YYYYMMDD
+python3 scripts/validate_content_layer.py --project-dir <project_dir>
 ```
 
-Passing validation should confirm schema validity, shot coverage, timing bounds, export readiness, and no-TTS boundaries.
+VTT/SRT are review and import artifacts. They do not authorize subtitle burn-in or Jianying insertion. Model-generated in-frame text is a visual QC risk, never subtitle truth.
+
+## Audio plan
+
+Separate voiceover, original audio, music, and effects/ambience. When no audio has been generated, preserve `no_tts_generated_in_mvp=true` and state the missing alignment source.
+
+## Acceptance
+
+Passing validation must prove schema validity, shot coverage/order, positive timing, declared export targets, and the no-TTS boundary. Final voice alignment and audio quality require a later evidence loop.

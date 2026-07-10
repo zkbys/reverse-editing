@@ -20,6 +20,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Validate reverse-editing content-layer files.")
     parser.add_argument("--project-dir", type=Path, required=True)
     parser.add_argument("--no-export", action="store_true", help="Validate only; do not write VTT/SRT.")
+    parser.add_argument("--force", action="store_true", help="Allow replacing generated validation/VTT/SRT artifacts.")
     return parser.parse_args()
 
 
@@ -143,6 +144,20 @@ def main() -> None:
     errors.extend(contract_errors)
     subtitle_track = load_json(project_dir / "subtitles" / "subtitle_track.json")
     outputs: dict[str, str] = {}
+    generated_paths = [project_dir / "reports" / "content_layer_validation.json"]
+    if not args.no_export:
+        generated_paths.extend(
+            [
+                project_dir / "subtitles" / "subtitles.vtt",
+                project_dir / "subtitles" / "subtitles.srt",
+            ]
+        )
+    existing = [path for path in generated_paths if path.exists()]
+    if existing and not args.force:
+        raise SystemExit(
+            "generated content-layer artifacts already exist; preserve them or rerun with --force: "
+            + ", ".join(str(path) for path in existing)
+        )
     if not args.no_export:
         write_text(project_dir / "subtitles" / "subtitles.vtt", export_vtt(subtitle_track))
         write_text(project_dir / "subtitles" / "subtitles.srt", export_srt(subtitle_track))
