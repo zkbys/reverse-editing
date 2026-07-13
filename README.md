@@ -20,6 +20,46 @@
 
 `17-slot` 是一次真实 forward test 和回归样本，不是固定规则；不同视频按自己的 storyboard/previs 决定 N。
 
+## 输入与输出
+
+### 输入
+
+- **一条参考视频**（本地文件或用户已授权下载的链接）
+- **门店/产品基础信息**（名称、城市、核心产品、人物角色等）
+- **用户对当前 loop 的显式授权**（下载、TTS、剪映写入等高危操作默认禁用）
+
+### 输出
+
+完成端到端闭环后，得到一个完整的单条视频逆向剪辑工程包：
+
+```text
+outputs/<project_id>/
+  source/           ← 参考视频及元数据
+  analysis/         ← 镜头结构分析、OCR 复核报告
+  storyboard/       ← 可读故事板 + 结构化 JSON
+  previs/           ← HTML 视觉预览
+  content/          ← 可编辑文案、配音脚本、时间轴包
+  subtitles/        ← VTT/SRT/JSON 字幕 + 词级时间戳
+  audio/            ← 配音时间线 + 音频混合计划
+  media/            ← N 个视频 slot（待替换为真实素材）
+  jianying_manifest/ ← 剪映工程清单与验证报告
+  exports/          ← 内部预览 MP4（确定性渲染）
+  delivery/         ← 最终交付包（README + KNOWN_LIMITATIONS）
+```
+
+### 什么能直接发布，什么不能
+
+| 产物 | 能否直接发布 | 说明 |
+|------|-----------|------|
+| storyboard、previs、content 层 | ✅ 可讨论 | 纯文本/结构化数据，无版权风险 |
+| 字幕、配音脚本 | ✅ 可修改后使用 | 需替换为真人配音 |
+| 内部预览 MP4 | ❌ 不可发布 | 含占位语音、QC override 素材、内部占位片尾 |
+| 剪映工程草稿 | ❌ 不可发布 | 需替换真实素材并重新导出 |
+
+**最终完成标准**：用户拿到一个剪映可打开、可替换素材、可继续编辑、能播放、能导出的单条视频工程包。它可以明确标记为内部 Demo，不必强行达到商业发布质量。
+
+> **v1 已冻结（2026-07-11）**。已通过第二条真实参考视频 forward test 和干净包回归（17-slot + 5-slot）。发布仓库只包含通用 Skill、虚构 sample 和合成测试，不包含真实参考资产或项目 outputs。后续优化全部放入 backlog，不再自动执行。
+
 ## 安装成 Codex Skill
 
 ```bash
@@ -78,25 +118,6 @@ python3 tests/run_clean_package_smoke.py
 - 上传真实视频、生成视频、剪映草稿、截图、outputs、本机路径、账号信息、密钥或实验过程
 
 任何 OCR、人工 override、文件校验或 GUI 播放通过，都不能把内部预演升级成发布素材。
-
-## 状态
-
-**v1 已冻结（2026-07-11）**。单条视频逆向剪辑工作流已完成端到端闭环：
-
-- intake、镜头分析、storyboard/previs
-- 可编辑 content 层（copy/voiceover/subtitle/audio）、VTT/SRT 导出
-- Tesseract 抽帧 OCR + 人工 contact sheet 复核
-- QC override 审计与本地非发布占位
-- 动态 N-slot 剪映 seed clone + 时长适配
-- 文件级与 GUI 分层验收
-- 确定性内部预览 MP4 渲染
-- 结构化交付包（README + KNOWN_LIMITATIONS）
-
-已通过第二条真实参考视频 forward test 和干净包回归（17-slot + 5-slot）。发布仓库只包含通用 Skill、虚构 sample 和合成测试，不包含真实参考资产或项目 outputs。
-
-后续优化全部放入 backlog，不再自动执行。如需继续推进（替换真实素材、真人配音、发布级处理），需显式授权。
-
-当前包已经通过第二条真实参考视频 forward test，并完成干净包的 17-slot 与非 17-slot 回归。发布仓库只包含通用 Skill、虚构 sample 和合成测试，不包含真实参考资产或项目 outputs。
 
 ## License
 
