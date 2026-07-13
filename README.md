@@ -81,6 +81,21 @@ python3 tests/run_clean_package_smoke.py
 
 ## 状态
 
+**v1 已冻结（2026-07-11）**。单条视频逆向剪辑工作流已完成端到端闭环：
+
+- intake、镜头分析、storyboard/previs
+- 可编辑 content 层（copy/voiceover/subtitle/audio）、VTT/SRT 导出
+- Tesseract 抽帧 OCR + 人工 contact sheet 复核
+- QC override 审计与本地非发布占位
+- 动态 N-slot 剪映 seed clone + 时长适配
+- 文件级与 GUI 分层验收
+- 确定性内部预览 MP4 渲染
+- 结构化交付包（README + KNOWN_LIMITATIONS）
+
+已通过第二条真实参考视频 forward test 和干净包回归（17-slot + 5-slot）。发布仓库只包含通用 Skill、虚构 sample 和合成测试，不包含真实参考资产或项目 outputs。
+
+后续优化全部放入 backlog，不再自动执行。如需继续推进（替换真实素材、真人配音、发布级处理），需显式授权。
+
 当前包已经通过第二条真实参考视频 forward test，并完成干净包的 17-slot 与非 17-slot 回归。发布仓库只包含通用 Skill、虚构 sample 和合成测试，不包含真实参考资产或项目 outputs。
 
 ## License

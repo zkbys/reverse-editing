@@ -177,3 +177,8 @@ Load only the current loop's reference:
 ## Validated status
 
 The package has passed a second real-reference forward test through storyboard/previs, editable content, local OCR plus human QC, audited override, seed clone, clone-local short-clip fitting, file validation, and full GUI playback. That evidence remains internal-preview evidence. Clean-package regression covers both the validated 17-slot case and a non-17 case to ensure slot count stays video-specific.
+
+**v1 frozen** (2026-07-11): Single-video reverse-editing workflow is now complete. The end-to-end chain—intake, shot analysis, storyboard/previs, editable content layer (copy/voiceover/subtitle/audio), VTT/SRT export, visual OCR + human QC, QC override audit, N-slot Jianying seed clone with duration fitting, file/GUI validation, deterministic internal preview render, and structured delivery package—has been validated on one real reference video and packaged as a frozen v1. No further autonomous expansion unless explicitly requested.
+
+
+The package has passed a second real-reference forward test through storyboard/previs, editable content, local OCR plus human QC, audited override, seed clone, clone-local short-clip fitting, file validation, and full GUI playback. That evidence remains internal-preview evidence. Clean-package regression covers both the validated 17-slot case and a non-17 case to ensure slot count stays video-specific.
