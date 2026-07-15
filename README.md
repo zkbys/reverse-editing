@@ -1,66 +1,148 @@
 # Reverse Editing Workflow
 
-语言 / Language: 中文 | [English](README.en.md)
+> 把你的对标视频，变成一套可执行、可修改、可复拍的视频制作方案。
 
-> Local-first Codex Skill + Claude Code workflow for turning a short-video reference into an editable internal production package.
+---
 
-## 能做什么
+## 一句话说清楚
 
-`reverse-editing-workflow` 将每条参考视频隔离成独立 `project_id`，并通过小闭环生成和验证：
+上传一条你觉得拍得好的短视频，AI 帮你拆解它的镜头结构、文案节奏和信任逻辑，输出一套完整的制作方案——包括拍摄清单、故事板、可编辑字幕/配音脚本，以及一个剪映可打开的预演工程。
 
-- 参考 intake、视频分析、镜头结构
-- storyboard / HTML previs
-- 可编辑 copy、voiceover、subtitle、word timing、audio plan
-- WebVTT / SRT 导出
-- Tesseract 抽帧 OCR + 人工 contact sheet 复核
-- 人工 QC override 审计与本地非发布占位记录
-- 按当前视频动态推导的 N-slot 剪映 seed clone
-- clone-local 短素材末帧延长
-- 文件级、用户报告、截图、录屏四种诚实验收层级
+---
 
-`17-slot` 是一次真实 forward test 和回归样本，不是固定规则；不同视频按自己的 storyboard/previs 决定 N。
+## 解决了什么问题
 
-## 输入与输出
+每次想拍视频，最头疼的不是剪辑，而是：
+
+- 不知道拍什么镜头
+- 不知道文案怎么写
+- 不知道镜头之间怎么衔接
+- 拍完后发现和想要的节奏完全不一样
+
+**Reverse Editing Workflow** 的解决方式是：**先找到一条对标视频，逆向拆解它的成功结构，再用这个结构指导你的拍摄和剪辑。**
+
+不是从零创作，而是有结构地复刻和优化。
+
+---
+
+## 完整流程：输入 → 处理 → 输出
+
+```
+【输入】                          【处理】                          【输出】
+一条参考视频        →    ① AI 分析镜头结构        →    镜头拆解报告
+                        （需视频理解 AI Agent）         + 参考帧 contact sheet
+
+门店/产品基础信息    →    ② 生成故事板 + 拍摄指导     →    HTML 预演页面
+（名称、城市、产品等）      （需 AI 文案能力）              + 拍摄清单
+
+                        ③ 生成可编辑内容层          →    文案脚本
+                           （配音脚本、字幕时间轴、      + 配音脚本
+                            词级时间戳）                + VTT/SRT 字幕文件
+                                                       + 音频混合计划
+
+                        ④ 视频素材 QC              →    OCR 抽帧复核报告
+                           （Tesseract 本地 OCR）       + 人工 contact sheet
+
+                        ⑤ 剪映工程组装             →    可打开的剪映草稿
+                           （本地脚本操作剪映）          + 完整时间线
+                                                       + 可替换的 N 个视频 slot
+
+                        ⑥ 确定性渲染预览           →    内部预览 MP4
+                           （FFmpeg 本地渲染）          + 交付包
+```
+
+---
+
+## 基础版 vs 完整版
+
+### ✅ 基础版（开箱即用）
+
+不需要任何 API，本机安装即可使用：
+
+| 能力 | 需要 |
+|------|------|
+| 镜头结构分析 | FFmpeg + ffprobe（本机） |
+| 故事板与预演 | 具备视频理解能力的 AI Agent |
+| 可编辑文案/配音/字幕层 | AI Agent |
+| 字幕 VTT/SRT 导出 | Python + jsonschema + Pillow |
+| 本地 OCR 复核 | Tesseract（可选，缺失时保留 gap） |
+| 剪映工程组装 | Mac 剪映专业版 + 本地脚本 |
+| 内部预览 MP4 | FFmpeg |
+
+**一句话：只要你的 AI Agent 能看视频、能写文案，基础版就能跑通。**
+
+### 🚀 完整版（进阶扩展）
+
+在基础版之上，如需**自动生成视频素材**，需要额外配置：
+
+| 扩展能力 | 需要 |
+|---------|------|
+| AI 视频生成（替换 placeholder 素材） | LibTV / 可灵 / 其他视频生成 API |
+| AI 配音生成 | TTS API（如豆包、阿里云等） |
+
+**这些扩展默认关闭，需要你对当前操作显式授权才会调用。**
+
+---
+
+## 一个完整案例：眼镜店视频
 
 ### 输入
 
-- **一条参考视频**（本地文件或用户已授权下载的链接）
-- **门店/产品基础信息**（名称、城市、核心产品、人物角色等）
-- **用户对当前 loop 的显式授权**（下载、TTS、剪映写入等高危操作默认禁用）
+- **参考视频**：一条杭州眼镜店的抖音视频（约 64 秒，17 个镜头）
+- **门店信息**：
+  - 店名：澄明眼镜青禾路店
+  - 城市：杭州
+  - 核心产品：青少年近视防控验配、成人渐进多焦点镜片
+  - 人物角色：主理验光师林岚
+
+### 处理
+
+AI Agent 分析参考视频后，逆向拆解出 17 个镜头的结构：
+
+| 镜头 | 类型 | 功能 |
+|------|------|------|
+| shot_001 | 人物口播 | 开场建立信任 |
+| shot_002-004 | 产品 B-roll | 展示验光设备 |
+| ... | ... | ... |
+| shot_017 | 结尾行动号召 | 引导到店 |
+
+每个镜头都配有：
+- **拍摄指导**：机位、景别、动作建议
+- **文案方向**：口播内容或画面配字
+- **时长目标**：精确到毫秒
 
 ### 输出
 
-完成端到端闭环后，得到一个完整的单条视频逆向剪辑工程包：
+交付包包含：
 
-```text
-outputs/<project_id>/
-  source/           ← 参考视频及元数据
-  analysis/         ← 镜头结构分析、OCR 复核报告
-  storyboard/       ← 可读故事板 + 结构化 JSON
-  previs/           ← HTML 视觉预览
-  content/          ← 可编辑文案、配音脚本、时间轴包
-  subtitles/        ← VTT/SRT/JSON 字幕 + 词级时间戳
-  audio/            ← 配音时间线 + 音频混合计划
-  media/            ← N 个视频 slot（待替换为真实素材）
-  jianying_manifest/ ← 剪映工程清单与验证报告
-  exports/          ← 内部预览 MP4（确定性渲染）
-  delivery/         ← 最终交付包（README + KNOWN_LIMITATIONS）
+```
+delivery/
+  README.md                    ← 使用指南
+  storyboard/storyboard.md     ← 完整故事板
+  previs/index.html            ← 可浏览的预演页面
+  content/
+    copy_script.json           ← 可修改文案
+    voiceover_script.json      ← 配音脚本
+  subtitles/
+    subtitles.vtt              ← 字幕文件
+    word_timestamps.json       ← 词级时间轴
+  audio/
+    audio_mix_plan.json        ← 音频混合计划
+  jianying_manifest/           ← 剪映工程配置
+  internal_preview.mp4         ← 内部预览视频
 ```
 
-### 什么能直接发布，什么不能
+剪映打开后，看到：
+- 17 段视频时间线
+- 17 条可编辑字幕
+- 1 条配音音频轨
+- 所有素材可替换、可修改
 
-| 产物 | 能否直接发布 | 说明 |
-|------|-----------|------|
-| storyboard、previs、content 层 | ✅ 可讨论 | 纯文本/结构化数据，无版权风险 |
-| 字幕、配音脚本 | ✅ 可修改后使用 | 需替换为真人配音 |
-| 内部预览 MP4 | ❌ 不可发布 | 含占位语音、QC override 素材、内部占位片尾 |
-| 剪映工程草稿 | ❌ 不可发布 | 需替换真实素材并重新导出 |
+---
 
-**最终完成标准**：用户拿到一个剪映可打开、可替换素材、可继续编辑、能播放、能导出的单条视频工程包。它可以明确标记为内部 Demo，不必强行达到商业发布质量。
+## 安装
 
-> **v1 已冻结（2026-07-11）**。已通过第二条真实参考视频 forward test 和干净包回归（17-slot + 5-slot）。发布仓库只包含通用 Skill、虚构 sample 和合成测试，不包含真实参考资产或项目 outputs。后续优化全部放入 backlog，不再自动执行。
-
-## 安装成 Codex Skill
+### 1. 安装成 Codex Skill
 
 ```bash
 git clone https://github.com/zkbys/reverse-editing.git
@@ -68,56 +150,29 @@ mkdir -p ~/.codex/skills
 cp -R reverse-editing/skills/reverse-editing-workflow ~/.codex/skills/
 ```
 
-重启 Codex 后调用：
-
-```text
-Use $reverse-editing-workflow to process this reference as a safe local editable workflow package. Keep download, LibTV, TTS, OCR installation, and Jianying writes disabled until I explicitly authorize the current loop.
-```
-
-## Claude Code 入口
-
-Clone 仓库后先读：
-
-```text
-CLAUDE.md
-skills/reverse-editing-workflow/SKILL.md
-```
-
-## 本地 sample
+### 2. 本机依赖
 
 ```bash
 pip install -r requirements.txt
-python3 skills/reverse-editing-workflow/scripts/validate_intake.py \
-  --intake samples/fake-corner-noodle/intake.json
-python3 skills/reverse-editing-workflow/scripts/init_project.py \
-  --intake samples/fake-corner-noodle/intake.json \
-  --output-root /tmp/reverse-editing-demo \
-  --report /tmp/reverse-editing-demo-init.json
-python3 skills/reverse-editing-workflow/scripts/validate_content_layer.py \
-  --project-dir samples/fake-corner-noodle --force
+# 需要本机已有 ffmpeg 和 ffprobe
+# Tesseract 可选，缺失时 OCR 步骤会跳过
 ```
 
-运行完整隔离 smoke（需要本机已有 `ffmpeg/ffprobe`；Tesseract 缺失时会保留 OCR gap，不会自动安装）：
+### 3. 调用
 
-```bash
-python3 tests/run_clean_package_smoke.py
+```text
+Use $reverse-editing-workflow to process this reference as a safe local editable workflow package. Keep download, LibTV, TTS, OCR installation, and Jianying writes disabled until I explicitly authorize it.
 ```
 
-该 smoke 将 Skill 安装到临时目录，验证 intake、内容层、VTT/SRT、视觉 QC、人工 override、Jianying 默认拒绝写入、17-slot 回归和 5-slot 动态场景。所有草稿和媒体均为临时合成 fixture，不触碰真实剪映目录。
+---
 
-## 默认安全边界
+## 安全边界
 
-除非用户对当前 loop 明确授权，否则禁止：
+- 不下载、不生成、不修改剪映草稿，除非你**当前操作显式授权**
+- 不上传任何真实视频、素材或工程文件
+- 所有产物标记为 `internal_preview`，不是 `publish_ready`
 
-- 下载参考视频
-- 运行 LibTV / 远程视频生成
-- 调用 TTS、付费配音或付费 OCR
-- 安装 OCR / FFmpeg 依赖
-- 创建、注册或修改剪映草稿
-- 烧入字幕或配音
-- 上传真实视频、生成视频、剪映草稿、截图、outputs、本机路径、账号信息、密钥或实验过程
-
-任何 OCR、人工 override、文件校验或 GUI 播放通过，都不能把内部预演升级成发布素材。
+---
 
 ## License
 
